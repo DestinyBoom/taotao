@@ -4,3 +4,10 @@
 out
 gen
 
+.gitignore
+taotao-manage/taotao-manage-mapper/target/
+taotao-manage/taotao-manage-pojo/target/
+taotao-manage/taotao-manage-service/target/
+taotao-manage/taotao-manage-web/src/main/resources/mybatis/mappers/
+taotao-manage/taotao-manage-web/src/main/webapp/js/kindeditor-4.1.10/attached/
+taotao-manage/taotao-manage-web/target/
