@@ -30,7 +30,10 @@ public class ItemCatController {
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<List<ItemCat>> queryItemCat(@RequestParam(value = "id", defaultValue = "0") Long parentId){
         try {
-            List<ItemCat> list = this.itemCatService.queryItemCatListByParentId(parentId);
+            //List<ItemCat> list = this.itemCatService.queryItemCatListByParentId(parentId);
+            ItemCat record = new ItemCat();
+            record.setParentId(parentId);
+            List<ItemCat> list = this.itemCatService.queryListByWhere(record);
             if (list == null || list.isEmpty()){
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
             }
