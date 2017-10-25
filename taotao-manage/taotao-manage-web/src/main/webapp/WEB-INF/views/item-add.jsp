@@ -71,7 +71,7 @@
 			TAOTAO.changeItemParam(node, "itemAddForm");
 		}});
 	});
-	
+
 	function submitForm(){
 		if(!$('#itemAddForm').form('validate')){
 			$.messager.alert('提示','表单还未填写完成!');
@@ -81,7 +81,7 @@
 		$("#itemAddForm [name=price]").val(eval($("#itemAddForm [name=priceView]").val()) * 100);
 		//将编辑器中的内容同步到隐藏多行文本中
 		itemAddEditor.sync();
-		
+
 		//输入的规格参数数据保存为json
 		var paramJson = [];
 		$("#itemAddForm .params li").each(function(i,e){
@@ -101,28 +101,33 @@
 			});
 		});
 		paramJson = JSON.stringify(paramJson);
-		
+
 		$("#itemAddForm [name=itemParams]").val(paramJson);
-		
+
 		/*
-		$.post("/rest/item/save",$("#itemAddForm").serialize(), function(data){
-			if(data.status == 200){
-				$.messager.alert('提示','新增商品成功!');
-			}
-		});
-		*/
-		
+		 $.post("/rest/item/save",$("#itemAddForm").serialize(), function(data){
+		 if(data.status == 200){
+		 $.messager.alert('提示','新增商品成功!');
+		 }
+		 });
+		 */
+
 		//提交到后台的RESTful
 		$.ajax({
-		   type: "POST",
-		   url: "/rest/item",
-		   data: $("#itemAddForm").serialize(),
-		   success: function(msg){
-			   $.messager.alert('提示','新增商品成功!');
-		   },
-		   error: function(){
-			   $.messager.alert('提示','新增商品失败!');
-		   }
+			type: "POST",
+			url: "/rest/item",
+			data: $("#itemAddForm").serialize(), //表单序列化，将所有的输入内容转化成K/V数据格式
+			statusCode : {
+				201 : function(){
+					$.messager.alert('提示','新增商品成功!');
+				},
+				400 : function(){
+					$.messager.alert('提示','提交的参数不合法!');
+				},
+				500 : function(){
+					$.messager.alert('提示','新增商品失败!');
+				}
+			}
 		});
 	}
 	

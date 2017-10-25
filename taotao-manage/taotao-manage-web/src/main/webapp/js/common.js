@@ -126,6 +126,9 @@ var TT = TAOTAO = {
     			    				_ele.next().text(node.text).attr("cid",node.id);
     			    				$(_win).window('close');
     			    				if(data && data.fun){
+										//通过.call执行传入的function(回调函数)
+										//第一个参数必须传入，一般为this
+										//第二个参数为function的参数
     			    					data.fun.call(this,node);
     			    				}
     			    			}

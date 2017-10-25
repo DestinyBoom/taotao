@@ -57,7 +57,7 @@
 		TT.initOnePicUpload();
 		$("#contentAddForm [name=categoryId]").val($("#contentCategoryTree").tree("getSelected").id);
 	});
-	
+
 	var contentAddPage  = {
 			submitForm : function (){
 				if(!$('#contentAddForm').form('validate')){

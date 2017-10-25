@@ -14,13 +14,13 @@ import java.util.List;
 @Service
 public class ItemCatService extends BaseService<ItemCat>{
 
-    @Autowired
-    private ItemCatMapper itemCatMapper;
+    //@Autowired
+    //private ItemCatMapper itemCatMapper;
 
-    @Override
+   /* @Override
     public Mapper<ItemCat> getMapper(){
         return this.itemCatMapper;
-    }
+    }*/
 
     /**
      * 根据父节点id查询商品列表
