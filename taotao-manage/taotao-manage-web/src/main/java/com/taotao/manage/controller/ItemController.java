@@ -11,10 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by zb on 2017/10/24.
@@ -35,7 +32,8 @@ public class ItemController {
      * @return
      */
     @PostMapping
-    public ResponseEntity<Void> saveItem(Item item, @RequestParam("desc") String desc){
+    public ResponseEntity<Void> saveItem(Item item, @RequestParam("desc") String desc,
+                                         @RequestParam("itemParams") String itemParams){
         try {
             if (LOGGER.isDebugEnabled()){
                 LOGGER.debug("新增商品，item = { }, desc = { }", item, desc);
@@ -46,7 +44,7 @@ public class ItemController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             }
 
-            this.itemService.saveItem(item, desc);
+            this.itemService.saveItem(item, desc, itemParams);
 
             if (LOGGER.isInfoEnabled()){
                 LOGGER.info("新增商品成功，itemId = { }", item.getId());
@@ -79,5 +77,39 @@ public class ItemController {
         }
         //500
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+    }
+
+
+    /**
+     * 修改商品信息
+     * @param item
+     * @param desc
+     * @return
+     */
+    @PutMapping
+    public ResponseEntity<Void> updateItem(Item item, @RequestParam("desc") String desc,
+                                           @RequestParam("itemParams") String itemParams){
+        try {
+            if (LOGGER.isDebugEnabled()){
+                LOGGER.debug("修改商品，item = { }, desc = { }", item, desc);
+            }
+
+            if (StringUtils.isEmpty(item.getTitle())){
+                //400,参数有误
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            }
+
+            this.itemService.updateItem(item, desc, itemParams);
+
+            if (LOGGER.isInfoEnabled()){
+                LOGGER.info("修改商品成功，itemId = { }", item.getId());
+            }
+            //204
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }catch (Exception e){
+            LOGGER.error("修改商品失败！title={ }, cid = { }, e={ }", item.getTitle(), item.getCid(), e);
+        }
+        //500
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 }

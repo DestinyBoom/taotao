@@ -1,7 +1,7 @@
 package com.taotao.manage.controller;
 
-import com.taotao.manage.pojo.ItemDesc;
-import com.taotao.manage.service.ItemDescService;
+import com.taotao.manage.pojo.ItemParamItem;
+import com.taotao.manage.service.ItemParamItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,34 +11,33 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- * Created by zb on 2017/10/24.
+ * Created by zb on 2017/10/30.
  */
-@RequestMapping("item/desc")
+@RequestMapping("item/param/item")
 @Controller
-public class ItemDescController {
+public class ItemParamItemController {
 
     @Autowired
-    private ItemDescService itemDescService;
+    private ItemParamItemService itemParamItemService;
 
     /**
-     * 根据商品id查询商品描述
+     * 根据商品id查询商品规格参数数据
      * @param itemId
      * @return
      */
     @GetMapping(value = "{itemId}")
-    public ResponseEntity<ItemDesc> queryByItemId(@PathVariable("itemId")Long itemId){
+    public ResponseEntity<ItemParamItem> queryByItemId(@PathVariable("itemId") Long itemId) {
         try {
-            ItemDesc itemDesc = this.itemDescService.queryById(itemId);
-            if (null == itemDesc){
-                //资源不存在404
+            ItemParamItem record = new ItemParamItem();
+            record.setItemId(itemId);
+            ItemParamItem itemParamItem = this.itemParamItemService.queryOne(record);
+            if (null == itemParamItem) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
             }
-            //200
-            return ResponseEntity.ok(itemDesc);
-        }catch (Exception e){
+            return ResponseEntity.ok(itemParamItem);
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        //500
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
     }
 }

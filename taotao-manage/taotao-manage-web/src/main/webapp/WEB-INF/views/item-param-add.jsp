@@ -54,17 +54,18 @@
 			  $.ajax({
 				   type: "GET",
 				   url: "/rest/item/param/" + node.id,
-				   success: function(data){
-					   if(data){
-						  $.messager.alert("提示", "该类目已经添加，请选择其他类目。", undefined, function(){
-							 $("#itemParamAddTable .selectItemCat").click();
-						  });
-						  return ;
-					  }
-					  $(".addGroupTr").show();
-				   },
-				   error: function(){
-					   alert("error");
+				   statusCode: {
+					   200 : function(){
+						   $.messager.alert("提示", "该类目已经添加，请选择其他类目。", undefined, function(){
+							   $("#itemParamAddTable .selectItemCat").click();
+						   });
+					   },
+					   404 : function(){
+						   $(".addGroupTr").show();
+					   },
+					   500 : function(){
+						   alert("error");
+					   }
 				   }
 				});
 			}
@@ -110,11 +111,26 @@
 				}
 			});
 			var url = "/rest/item/param/"+$("#itemParamAddTable [name=cid]").val();
-			$.post(url,{"paramData":JSON.stringify(params)},function(data){
-				$.messager.alert('提示','新增商品规格成功!',undefined,function(){
-					$(".panel-tool-close").click();
-   					$("#itemParamList").datagrid("reload");
-   				});
+
+			//提交到后台的RESTful
+			$.ajax({
+				type: "POST",
+				url: url,
+				data: {"paramData":JSON.stringify(params)},
+				statusCode : {
+					201 : function(){
+						$.messager.alert('提示','新增商品规格成功!',undefined,function(){
+							$(".panel-tool-close").click();
+							$("#itemParamList").datagrid("reload");
+						});
+					},
+					400 : function(){
+						$.messager.alert('提示','提交的参数不合法!');
+					},
+					500 : function(){
+						$.messager.alert('提示','新增商品规格参数模板失败!');
+					}
+				}
 			});
 		});
 	});

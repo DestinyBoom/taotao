@@ -102,18 +102,20 @@
 		
 		//提交到后台的RESTful
 		$.ajax({
-		   type: "PUT",
-		   url: "/rest/item",
-		   data: $("#itemeEditForm").serialize(),
-		   success: function(msg){
-			   $.messager.alert('提示','修改商品成功!','info',function(){
-					$("#itemEditWindow").window('close');
-					$("#itemList").datagrid("reload");
-				});
-		   },
-		   error: function(){
-			   $.messager.alert('提示','修改商品失败!');
-		   }
+		    type: "PUT",
+		    url: "/rest/item",
+		    data: $("#itemeEditForm").serialize(),
+			statusCode  : {
+				204 : function(){
+					$.messager.alert('提示','修改商品成功!','info',function(){
+						$("#itemEditWindow").window('close');
+						$("#itemList").datagrid("reload");
+					});
+				},
+				500 : function(){
+					$.messager.alert('提示','修改商品失败!');
+				}
+			}
 		});
 	}
 </script>
