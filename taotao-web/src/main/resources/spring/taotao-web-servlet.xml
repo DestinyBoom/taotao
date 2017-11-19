@@ -8,20 +8,10 @@
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
 	
 	<!-- 定义注解驱动 -->
-	<mvc:annotation-driven>
-		<mvc:message-converters register-defaults="true">
-			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
-				<constructor-arg index="0" value="UTF-8"/>
-			</bean>
-			<!--使用注解驱动配置全局jsonp失败。。-->
-			<!--<bean class="com.taotao.common.spring.extend.converter.json.CallbackMappingJackson2HttpMessageConverter">
-				<property name="callbackName" value="callback"/>
-			</bean>-->
-		</mvc:message-converters>
-	</mvc:annotation-driven>
+	<mvc:annotation-driven/>
 	
 	<!-- 定义Controller的扫描包 -->
-	<context:component-scan base-package="com.taotao.manage.controller"/>
+	<context:component-scan base-package="com.taotao.web.controller"/>
 	
 	<!-- 定义试图解析器 -->
 	<!-- 
@@ -32,8 +22,4 @@
 		<property name="suffix" value=".jsp"/>
 	</bean>
 
-	<!-- 上传解析器 -->
-	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-		<property name="maxUploadSize" value="5242880"/>
-	</bean>
 </beans>
