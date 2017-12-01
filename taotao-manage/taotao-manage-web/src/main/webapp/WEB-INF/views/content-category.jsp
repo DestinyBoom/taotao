@@ -16,10 +16,10 @@ $(function(){
 		animate: true,
 		method : "GET",
 		onContextMenu: function(e,node){
-            e.preventDefault();
+            e.preventDefault();//阻止默认事件，浏览器的右键菜单
             $(this).tree('select',node.target);
             $('#contentCategoryMenu').menu('show',{
-                left: e.pageX,
+                left: e.pageX,//显示的坐标
                 top: e.pageY
             });
         },
@@ -57,7 +57,7 @@ function menuHandler(item){
             parent: (node?node.target:null),
             data: [{
                 text: '新建分类',
-                id : 0,
+                id : 0,//初始值
                 parentId : node.id
             }]
         }); 
