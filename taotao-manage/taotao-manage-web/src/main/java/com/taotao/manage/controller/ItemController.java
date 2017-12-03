@@ -112,4 +112,18 @@ public class ItemController {
         //500
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
+
+    @GetMapping(value = "{itemId}")
+    public ResponseEntity<Item> queryById(@PathVariable("itemId") Long itemId){
+        try{
+            Item item = this.itemService.queryById(itemId);
+            if (null == item){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+            return ResponseEntity.ok(item);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+    }
 }
