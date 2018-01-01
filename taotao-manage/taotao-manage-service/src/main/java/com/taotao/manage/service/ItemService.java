@@ -1,5 +1,6 @@
 package com.taotao.manage.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.abel533.entity.Example;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -8,11 +9,14 @@ import com.taotao.manage.mapper.ItemMapper;
 import com.taotao.manage.pojo.Item;
 import com.taotao.manage.pojo.ItemDesc;
 import com.taotao.manage.pojo.ItemParamItem;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by zb on 2017/10/24.
@@ -31,8 +35,13 @@ public class ItemService extends BaseService<Item>{
     @Autowired
     private ApiService apiService;
 
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
     @Value("${TAOTAO_WEB_URL}")
     private String TAOTAO_WEB_URL;
+
+    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     public void saveItem(Item item, String desc, String itemParams) {
         //保存商品基本数据
@@ -51,6 +60,9 @@ public class ItemService extends BaseService<Item>{
         itemParamItem.setItemId(item.getId());
         itemParamItem.setParamData(itemParams);
         this.itemParamItemService.save(itemParamItem);
+
+        //发送消息
+        sendMsg(item.getId(), "insert");
     }
 
     public PageInfo<Item> queryPageList(Integer page, Integer rows) {
@@ -80,10 +92,26 @@ public class ItemService extends BaseService<Item>{
         //修改商品规格参数数据
         this.itemParamItemService.updateSelective(item.getId(), itemParams);
 
-        try {
+        /*try {
             //通知其他系统，数据已经更新
             String url = TAOTAO_WEB_URL + "/item/cache/" + item.getId() + ".html";
             this.apiService.doPost(url, null);
+        }catch (Exception e){
+            e.printStackTrace();
+        }*/
+
+        //发送消息
+        sendMsg(item.getId(), "update");
+    }
+
+    private void sendMsg(Long itemId, String type){
+        try {
+            Map<String, Object> msg = new HashMap<String, Object>();
+            msg.put("itemId", itemId);
+            msg.put("type", type);
+            msg.put("date", System.currentTimeMillis());
+
+            this.rabbitTemplate.convertAndSend("item.update", MAPPER.writeValueAsString(msg));
         }catch (Exception e){
             e.printStackTrace();
         }
