@@ -123,7 +123,7 @@ public class UserController {
 
     @GetMapping("{token}")
     public ResponseEntity<User> queryByToken(@PathVariable("token")String token){
-        try {
+        /*try {
             User user = this.userService.queryByToken(token);
             if (null == user){
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
@@ -132,6 +132,9 @@ public class UserController {
         }catch (Exception e){
             e.printStackTrace();
         }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);*/
+        User user = new User();
+        user.setUsername("该服务已经停止了，请访问ssoquery.taotao.com或dubbo中的服务！");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(user);
     }
 }

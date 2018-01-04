@@ -1,7 +1,6 @@
 package com.taotao.sso.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.abel533.mapper.Mapper;
 import com.taotao.common.service.RedisService;
 import com.taotao.sso.mapper.UserMapper;
 import com.taotao.sso.pojo.User;
